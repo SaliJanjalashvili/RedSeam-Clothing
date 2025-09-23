@@ -6,4 +6,5 @@ document.addEventListener('DOMContentLoaded', function () {
 function initializeApp() {
   initAuthForms();
   initImageUpload();
+  initPlaceholderStyling();
 }
