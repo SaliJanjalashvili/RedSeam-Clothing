@@ -28,24 +28,55 @@
         <img src="assets/login/Img.png" alt="Login Image">
       </div>
       <div class="login-form">
-        <h2 class="form-title">Log in</h2>
-        <div class="form-container">
-          <div class="input-fields">
-            <input type="email" placeholder="Email *" required>
-            <div class="password-field">
-              <input type="password" placeholder="Password *" required>
-              <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+        <!-- Login Form -->
+        <div class="login-form-content">
+          <h2 class="form-title">Log in</h2>
+          <div class="form-container">
+            <div class="input-fields">
+              <input type="email" placeholder="Email *" required>
+              <div class="password-field">
+                <input type="password" placeholder="Password *" required>
+                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+              </div>
+            </div>
+            <div class="button-section">
+              <button type="submit" class="login-btn">Log In</button>
+              <p class="register-link">Not a member? <span id="showRegister">Register</span></p>
             </div>
           </div>
-          <div class="button-section">
-            <button type="submit" class="login-btn">Log In</button>
-            <p class="register-link">Not a member? <span>Register</span></p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="registration-form-content hidden">
+          <h2 class="form-title">Registration</h2>
+          <div class="form-container">
+            <div class="upload-image">
+              <img src="assets/login/avatar.svg" alt="Upload avatar" class="avatar-icon">
+              <span class="upload-text">Upload image</span>
+            </div>
+            <div class="input-fields registration-fields">
+              <input type="text" placeholder="Username *" required>
+              <input type="email" placeholder="Email *" required>
+              <div class="password-field">
+                <input type="password" placeholder="Password *" required>
+                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+              </div>
+              <div class="password-field">
+                <input type="password" placeholder="Confirm password *" required>
+                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+              </div>
+            </div>
+            <div class="button-section">
+              <button type="submit" class="login-btn">Register</button>
+              <p class="register-link">Already member? <span id="showLogin">Log in</span></p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </main>
 
+  <script src="script.js"></script>
 </body>
 
 </html>
