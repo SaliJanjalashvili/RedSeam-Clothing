@@ -51,8 +51,15 @@
           <h2 class="form-title">Registration</h2>
           <div class="form-container">
             <div class="upload-image">
-              <img src="assets/login/avatar.svg" alt="Upload avatar" class="avatar-icon">
-              <span class="upload-text">Upload image</span>
+              <input type="file" id="imageUpload" accept="image/*" class="hidden">
+              <div class="avatar-container" id="avatarContainer">
+                <img src="assets/login/avatar.svg" alt="Upload avatar" class="avatar-icon" id="avatarIcon">
+                <img id="previewImage" class="preview-image hidden" alt="Preview">
+              </div>
+              <div class="upload-controls">
+                <span class="upload-text" id="uploadText">Upload image</span>
+                <span class="remove-image hidden" id="removeImage">Remove</span>
+              </div>
             </div>
             <div class="input-fields registration-fields">
               <input type="text" placeholder="Username *" required>
@@ -76,6 +83,8 @@
     </div>
   </main>
 
+  <script src="js/auth.js"></script>
+  <script src="js/upload.js"></script>
   <script src="script.js"></script>
 </body>
 
