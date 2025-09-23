@@ -199,6 +199,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
 .input-fields input {
@@ -233,6 +234,17 @@ body {
   width: 20px;
   height: 20px;
   cursor: pointer;
+}
+
+.error-message {
+  position: absolute;
+  color: var(--red);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 10px;
+  line-height: 100%;
+  z-index: 10;
 }
 
 .button-section {
@@ -297,6 +309,7 @@ body {
 .registration-fields {
   width: 554px;
   height: 240px;
+  position: relative;
 }
 
 .upload-image {

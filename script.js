@@ -7,4 +7,5 @@ function initializeApp() {
   initAuthForms();
   initImageUpload();
   initPlaceholderStyling();
+  initRegistrationValidation();
 }

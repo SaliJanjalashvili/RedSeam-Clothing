@@ -33,9 +33,9 @@
           <h2 class="form-title">Log in</h2>
           <div class="form-container">
             <div class="input-fields">
-              <input type="email" placeholder="Email *" required>
+              <input type="email" placeholder="Email *">
               <div class="password-field">
-                <input type="password" placeholder="Password *" required>
+                <input type="password" placeholder="Password *">
                 <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
               </div>
             </div>
@@ -49,7 +49,7 @@
         <!-- Registration Form -->
         <div class="registration-form-content hidden">
           <h2 class="form-title">Registration</h2>
-          <div class="form-container">
+          <form class="form-container" novalidate>
             <div class="upload-image">
               <input type="file" id="imageUpload" accept="image/*" class="hidden">
               <div class="avatar-container" id="avatarContainer">
@@ -62,14 +62,14 @@
               </div>
             </div>
             <div class="input-fields registration-fields">
-              <input type="text" placeholder="Username *" required>
-              <input type="email" placeholder="Email *" required>
+              <input type="text" placeholder="Username *">
+              <input type="email" placeholder="Email *">
               <div class="password-field">
-                <input type="password" placeholder="Password *" required>
+                <input type="text" placeholder="Password *">
                 <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
               </div>
               <div class="password-field">
-                <input type="password" placeholder="Confirm password *" required>
+                <input type="text" placeholder="Confirm password *">
                 <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
               </div>
             </div>
@@ -77,7 +77,7 @@
               <button type="submit" class="login-btn">Register</button>
               <p class="register-link">Already member? <span id="showLogin">Log in</span></p>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -86,6 +86,7 @@
   <script src="js/login/auth.js"></script>
   <script src="js/login/upload.js"></script>
   <script src="js/login/placeholder.js"></script>
+  <script src="js/login/registration.js"></script>
   <script src="script.js"></script>
 </body>
 
