@@ -1,3 +1,6 @@
+/* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 /* Color palette */
 :root {
   --dark-blue: #10151F;
@@ -5,6 +8,7 @@
   --light-gray: #F8F6F7;
   --white: #FFFFFF;
   --red: #FF4000;
+  --red-hover: #e63600;
 }
 
 /* reset */
@@ -12,10 +16,36 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Prevent element highlighting on click */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in input fields and text elements */
+input,
+textarea,
+p,
+span {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 body {
-  background-color: var(--light-gray);
+  background-color: var(--white);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: regular;
+  line-height: 100%;
+  letter-spacing: 0%;
 }
 
 /* navigation */
@@ -38,25 +68,6 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 100px;
-}
-
-/* responsive navigation */
-@media (max-width: 1920px) {
-  .nav-container {
-    padding: 0 5%;
-  }
-}
-
-@media (max-width: 1440px) {
-  .nav-container {
-    padding: 0 60px;
-  }
-}
-
-@media (max-width: 1366px) {
-  .nav-container {
-    padding: 0 40px;
-  }
 }
 
 .logo {
@@ -116,5 +127,152 @@ body {
 .cart-icon img {
   width: 24px;
   height: 24px;
+}
+
+/* Login Page Styles */
+.login-page {
+  margin-top: 80px;
+  height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  display: flex;
+  width: 100%;
+  max-width: 1920px;
+  height: 100%;
+  background-color: var(--white);
+  gap: 173px;
+}
+
+.login-image {
+  width: 948px;
+  height: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-image img {
+  width: 948px;
+  height: 1000px;
+  object-fit: cover;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 241px;
+}
+
+.form-title {
+  margin-bottom: 48px;
+  font-size: 42px;
+  font-weight: 600;
+  font-style: semibold;
+  line-height: 100%;
+  letter-spacing: 0%;
+  width: 124px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container {
+  width: 554px;
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.input-fields {
+  width: 554px;
+  height: 108px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.input-fields input {
+  width: 554px;
+  height: 42px;
+  padding: 0px 8px;
+  border: 1px solid var(--light-gray);
+  border-radius: 8px;
+  background-color: var(--white);
+  color: var(--gray);
+  box-sizing: border-box;
+}
+
+.input-fields input::placeholder {
+  color: var(--gray);
+}
+
+.input-fields input:focus {
+  border-color: var(--gray);
+  outline: none;
+}
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.button-section {
+  width: 554px;
+  height: 86px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-btn {
+  width: 554px;
+  height: 41px;
+  background-color: var(--red);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: var(--red-hover);
+}
+
+.register-link {
+  text-align: center;
+  color: var(--gray);
+  margin: 0;
+  width: 176px;
+  height: 21px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-link span {
+  color: var(--red);
+  cursor: pointer;
+  font-weight: 500;
+  text-align: center;
+}
+
+.register-link span:hover {
+  text-decoration: underline;
 }
 
