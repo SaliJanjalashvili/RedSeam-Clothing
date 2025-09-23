@@ -1,0 +1,120 @@
+/* Color palette */
+:root {
+  --dark-blue: #10151F;
+  --gray: #3E424A;
+  --light-gray: #F8F6F7;
+  --white: #FFFFFF;
+  --red: #FF4000;
+}
+
+/* reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--light-gray);
+}
+
+/* navigation */
+.top-nav {
+  width: 100%;
+  height: 80px;
+  background-color: var(--white);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1920px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 100px;
+}
+
+/* responsive navigation */
+@media (max-width: 1920px) {
+  .nav-container {
+    padding: 0 5%;
+  }
+}
+
+@media (max-width: 1440px) {
+  .nav-container {
+    padding: 0 60px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .nav-container {
+    padding: 0 40px;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 180px;
+  height: 24px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 64px;
+  height: 40px;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.login img {
+  width: 64px;
+  height: 20px;
+}
+
+.dropdown-arrow {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-arrow img {
+  width: 20px;
+  height: 20px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  background-color: var(--gray);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.cart-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.cart-icon img {
+  width: 24px;
+  height: 24px;
+}
+

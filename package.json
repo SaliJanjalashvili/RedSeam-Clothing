@@ -1,0 +1,25 @@
+{
+  "name": "redseam-clothing",
+  "version": "1.0.0",
+  "description": "E-commerce clothing website built with vanilla JavaScript",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000 --open=/",
+    "start": "live-server --port=3000 --open=/",
+    "build": "echo 'No build process needed for vanilla JS'",
+    "lint": "eslint js/**/*.js",
+    "format": "prettier --write ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
