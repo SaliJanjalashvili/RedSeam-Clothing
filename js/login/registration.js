@@ -196,6 +196,8 @@ function submitRegistration(username, email, password, passwordConfirmation) {
     sessionStorage.setItem('authToken', data.token);
     sessionStorage.setItem('user', JSON.stringify(data.user));
     
+    clearRegistrationForm();
+    
     window.location.href = 'products.html';
   })
   .catch(error => {
@@ -211,6 +213,40 @@ function submitRegistration(username, email, password, passwordConfirmation) {
     } else {
       console.error('Registration error:', error);
     }
+  });
+}
+
+function clearRegistrationForm() {
+  // reset form fields
+  const form = document.querySelector('.registration-form-content form');
+  if (form) {
+    form.reset();
+  }
+  
+  // clear any validation errors
+  clearErrors();
+  
+  // reset image upload to initial state
+  const avatarIcon = document.getElementById('avatarIcon');
+  const previewImage = document.getElementById('previewImage');
+  const uploadText = document.getElementById('uploadText');
+  const removeImage = document.getElementById('removeImage');
+  const imageUpload = document.getElementById('imageUpload');
+  
+  if (avatarIcon) avatarIcon.classList.remove('hidden');
+  if (previewImage) {
+    previewImage.classList.add('hidden');
+    previewImage.src = '';
+  }
+  if (uploadText) uploadText.textContent = 'Upload image';
+  if (removeImage) removeImage.classList.add('hidden');
+  if (imageUpload) imageUpload.value = '';
+  
+  // trigger placeholder refresh for all fields
+  const inputs = document.querySelectorAll('.registration-form-content input[placeholder*="*"]');
+  inputs.forEach(input => {
+    const event = new Event('blur', { bubbles: true });
+    input.dispatchEvent(event);
   });
 }
 
