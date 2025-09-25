@@ -47,6 +47,11 @@ function initPlaceholderStyling() {
     input.addEventListener('input', togglePlaceholder);
     input.addEventListener('focus', togglePlaceholder);
     input.addEventListener('blur', togglePlaceholder);
+    input.addEventListener('change', togglePlaceholder);
+    
+    // check for browser autofill after delays
+    setTimeout(togglePlaceholder, 100);
+    setTimeout(togglePlaceholder, 500);
     
     togglePlaceholder();
   });

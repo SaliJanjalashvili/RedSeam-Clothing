@@ -73,6 +73,7 @@ body {
 .logo {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .logo img {
@@ -84,7 +85,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  width: 64px;
   height: 40px;
 }
 
@@ -99,13 +99,13 @@ body {
   height: 20px;
 }
 
-.dropdown-arrow {
+.arrow {
   cursor: pointer;
   display: flex;
   align-items: center;
 }
 
-.dropdown-arrow img {
+.arrow img {
   width: 20px;
   height: 20px;
 }
@@ -113,8 +113,32 @@ body {
 .profile-pic {
   width: 40px;
   height: 40px;
-  background-color: var(--gray);
+  background-color: var(--light-gray);
   border-radius: 50%;
+  cursor: pointer;
+}
+
+.user-state {
+  width: 108px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-section {
+  width: 64px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
   cursor: pointer;
 }
 
@@ -127,6 +151,10 @@ body {
 .cart-icon img {
   width: 24px;
   height: 24px;
+}
+
+.cart {
+  cursor: pointer;
 }
 
 /* Login Page Styles */

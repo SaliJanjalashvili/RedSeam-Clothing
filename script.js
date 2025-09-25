@@ -8,4 +8,5 @@ function initializeApp() {
   initImageUpload();
   initPlaceholderStyling();
   initRegistrationValidation();
+  initLoginValidation();
 }

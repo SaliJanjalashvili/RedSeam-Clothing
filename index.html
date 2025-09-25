@@ -31,11 +31,11 @@
         <!-- Login Form -->
         <div class="login-form-content">
           <h2 class="form-title">Log in</h2>
-          <div class="form-container">
+          <form class="form-container" novalidate>
             <div class="input-fields">
               <input type="email" placeholder="Email *">
               <div class="password-field">
-                <input type="password" placeholder="Password *">
+                <input type="text" placeholder="Password *">
                 <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
               </div>
             </div>
@@ -43,7 +43,7 @@
               <button type="submit" class="login-btn">Log In</button>
               <p class="register-link">Not a member? <span id="showRegister">Register</span></p>
             </div>
-          </div>
+          </form>
         </div>
 
         <!-- Registration Form -->
@@ -87,6 +87,7 @@
   <script src="js/login/upload.js"></script>
   <script src="js/login/placeholder.js"></script>
   <script src="js/login/registration.js"></script>
+  <script src="js/login/login.js"></script>
   <script src="script.js"></script>
 </body>
 

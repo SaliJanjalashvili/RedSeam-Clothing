@@ -49,7 +49,7 @@ function validateAndSubmitForm() {
   }
   
   if (isValid) {
-    alert('Registration successful!');
+    submitRegistration(username, email, password, confirmPassword);
   }
 }
 
@@ -152,14 +152,74 @@ function showError(fieldType, message) {
   }
 }
 
+function submitRegistration(username, email, password, passwordConfirmation) {
+  const imageUpload = document.getElementById('imageUpload');
+  const avatarFile = imageUpload ? imageUpload.files[0] : null;
+  
+  const formData = new FormData();
+  formData.append('username', username);
+  formData.append('email', email);
+  formData.append('password', password);
+  formData.append('password_confirmation', passwordConfirmation);
+  
+  if (avatarFile) {
+    formData.append('avatar', avatarFile);
+  }
+
+  fetch('https://api.redseam.redberryinternship.ge/api/register', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json'
+    },
+    body: formData
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else if (response.status === 422) {
+      return response.json().then(data => {
+        throw { type: 'validation', data: data };
+      });
+    } else if (response.status === 401) {
+      return response.json().then(data => {
+        throw { type: 'auth', data: data };
+      });
+    } else {
+      throw { type: 'network', message: 'Network error occurred' };
+    }
+  })
+  .then(data => {
+    console.log('Registration successful!');
+    console.log('User registered:', data.user);
+    console.log('Token:', data.token);
+    
+    sessionStorage.setItem('authToken', data.token);
+    sessionStorage.setItem('user', JSON.stringify(data.user));
+    
+    window.location.href = 'products.html';
+  })
+  .catch(error => {
+    if (error.type === 'validation') {
+      console.error('Validation errors:', error.data.errors);
+      
+      if (error.data.errors.email) {
+        showError('email', error.data.errors.email[0]);
+      }
+      if (error.data.errors.username) {
+        showError('username', error.data.errors.username[0]);
+      }
+    } else {
+      console.error('Registration error:', error);
+    }
+  });
+}
+
 function clearErrors() {
-  // remove error styling
   const inputs = document.querySelectorAll('.registration-form-content input');
   inputs.forEach(input => {
     input.style.borderColor = 'var(--light-gray)';
   });
   
-  // remove error messages
   const errorMessages = document.querySelectorAll('.error-message');
   errorMessages.forEach(error => error.remove());
 } 
