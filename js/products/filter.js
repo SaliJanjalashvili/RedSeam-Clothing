@@ -24,9 +24,23 @@ function initFilter() {
   document.addEventListener('click', handleOutsideClick);
 }
 
+// Expose close function globally for other modules
+window.closeFilterPopup = function() {
+  const filterPopup = document.getElementById('filterPopup');
+  if (filterPopup && isFilterOpen) {
+    filterPopup.style.display = 'none';
+    isFilterOpen = false;
+  }
+};
+
 function toggleFilterPopup(event) {
   event.stopPropagation();
   const filterPopup = document.getElementById('filterPopup');
+  
+  // Close sort popup if open
+  if (window.closeSortPopup) {
+    window.closeSortPopup();
+  }
   
   if (isFilterOpen) {
     filterPopup.style.display = 'none';

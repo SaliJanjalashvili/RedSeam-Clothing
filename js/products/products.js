@@ -3,7 +3,7 @@
 
 window.currentPage = 1;
 window.currentFilters = {};
-let currentSort = '';
+window.currentSort = '';
 
 function initProducts() {
   loadProducts();
@@ -19,22 +19,22 @@ function initPagination() {
   if (prevButton) {
     prevButton.addEventListener('click', () => {
       if (window.currentPage > 1) {
-        loadProducts(window.currentPage - 1, window.currentFilters, currentSort);
+        loadProducts(window.currentPage - 1, window.currentFilters, window.currentSort);
       }
     });
   }
   
   if (nextButton) {
     nextButton.addEventListener('click', () => {
-      loadProducts(window.currentPage + 1, window.currentFilters, currentSort);
+      loadProducts(window.currentPage + 1, window.currentFilters, window.currentSort);
     });
   }
 }
 
-function loadProducts(page = window.currentPage, filters = window.currentFilters, sort = '') {
+function loadProducts(page = window.currentPage, filters = window.currentFilters, sort = window.currentSort) {
   window.currentPage = page;
   window.currentFilters = filters;
-  currentSort = sort;
+  window.currentSort = sort;
   
   const url = buildProductsUrl(page, filters, sort);
   

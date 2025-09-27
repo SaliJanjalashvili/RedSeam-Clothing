@@ -63,6 +63,15 @@
           <div class="sort-section">
             <span class="sort-text">Sort by</span>
             <img src="assets/nav/chevron-down.svg" alt="Sort" class="sort-arrow">
+            <!-- Sort Popup -->
+            <div class="sort-popup" id="sortPopup">
+              <h3 class="sort-popup-title">Sort by</h3>
+              <div class="sort-options">
+                <div class="sort-option" data-sort="">New products first</div>
+                <div class="sort-option" data-sort="price">Price, low to high</div>
+                <div class="sort-option" data-sort="-price">Price, high to low</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -100,6 +109,7 @@
   <script src="js/nav/navigation.js"></script>
   <script src="js/products/products.js"></script>
   <script src="js/products/filter.js"></script>
+  <script src="js/products/sort.js"></script>
 </body>
 
 </html>
