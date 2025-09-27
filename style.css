@@ -1,22 +1,25 @@
 /* Import Poppins font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 /* Color palette */
 :root {
-  --dark-blue: #10151F;
-  --gray: #3E424A;
-  --light-gray: #F8F6F7;
-  --white: #FFFFFF;
-  --red: #FF4000;
+  --dark-blue: #10151f;
+  --dark-gray: #212b36;
+  --gray: #3e424a;
+  --light-gray: #f8f6f7;
+  --white: #ffffff;
+  --red: #ff4000;
   --red-hover: #e63600;
 }
 
-/* reset */
 * {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: 0%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* Prevent element highlighting on click */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -40,12 +43,9 @@ span {
 
 body {
   background-color: var(--white);
-  font-family: 'Poppins', sans-serif;
   font-size: 14px;
-  font-weight: 400;
-  font-style: regular;
-  line-height: 100%;
-  letter-spacing: 0%;
+  margin: 0;
+  padding: 0;
 }
 
 /* navigation */
@@ -204,8 +204,6 @@ body {
   font-size: 42px;
   font-weight: 600;
   font-style: semibold;
-  line-height: 100%;
-  letter-spacing: 0%;
   width: 124px;
   height: 63px;
   display: flex;
@@ -267,11 +265,8 @@ body {
 .error-message {
   position: absolute;
   color: var(--red);
-  font-family: 'Poppins', sans-serif;
   font-weight: 300;
-  font-style: normal;
   font-size: 10px;
-  line-height: 100%;
   z-index: 10;
 }
 
@@ -425,12 +420,8 @@ body {
 }
 
 .products-title {
-  font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  font-style: normal;
   font-size: 42px;
-  line-height: 100%;
-  letter-spacing: 0%;
   color: var(--dark-blue);
   margin: 0;
 }
@@ -444,12 +435,7 @@ body {
 }
 
 .results-count {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  font-style: normal;
   font-size: 12px;
-  line-height: 100%;
-  letter-spacing: 0%;
   color: var(--gray);
 }
 
@@ -471,12 +457,7 @@ body {
 }
 
 .filter-text {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  font-style: normal;
   font-size: 16px;
-  line-height: 100%;
-  letter-spacing: 0%;
   color: var(--dark-blue);
 }
 
@@ -488,12 +469,7 @@ body {
 }
 
 .sort-text {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  font-style: normal;
   font-size: 16px;
-  line-height: 100%;
-  letter-spacing: 0%;
   color: var(--dark-blue);
 }
 
@@ -551,7 +527,6 @@ body {
   align-items: center;
   justify-content: center;
   color: var(--gray);
-  font-family: 'Poppins', sans-serif;
   font-size: 14px;
 }
 
@@ -566,23 +541,100 @@ body {
 }
 
 .product-name {
-  font-family: 'Poppins', sans-serif;
   font-weight: 500;
-  font-style: normal;
   font-size: 18px;
-  line-height: 100%;
-  letter-spacing: 0%;
   color: var(--dark-blue);
   margin: 0;
 }
 
 .product-price {
-  font-family: 'Poppins', sans-serif;
   font-weight: 500;
-  font-style: normal;
   font-size: 16px;
-  line-height: 100%;
-  letter-spacing: 0%;
   color: var(--dark-blue);
   margin: 0;
+}
+
+/* Pagination */
+.pagination-container {
+  width: 100%;
+  max-width: 1720px;
+  margin-top: 90px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pagination-arrow {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-arrow:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.pagination-arrow img {
+  width: 20px;
+  height: 20px;
+}
+
+.pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-number {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--light-gray);
+  border-radius: 4px;
+  background-color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: var(--dark-gray);
+}
+
+.pagination-number:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.pagination-number.active {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.pagination-ellipsis {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--light-gray);
+  border-radius: 4px;
+  background-color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--gray);
 }

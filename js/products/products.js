@@ -7,6 +7,26 @@ let currentSort = '';
 
 function initProducts() {
   loadProducts();
+  initPagination();
+}
+
+function initPagination() {
+  const prevButton = document.getElementById('prevPage');
+  const nextButton = document.getElementById('nextPage');
+  
+  if (prevButton) {
+    prevButton.addEventListener('click', () => {
+      if (currentPage > 1) {
+        loadProducts(currentPage - 1, currentFilters, currentSort);
+      }
+    });
+  }
+  
+  if (nextButton) {
+    nextButton.addEventListener('click', () => {
+      loadProducts(currentPage + 1, currentFilters, currentSort);
+    });
+  }
 }
 
 function loadProducts(page = 1, filters = {}, sort = '') {
@@ -29,10 +49,11 @@ function loadProducts(page = 1, filters = {}, sort = '') {
       throw new Error('Failed to fetch products');
     }
   })
-  .then(data => {
-    displayProducts(data.data);
-    updateResultsCount(data.meta);
-  })
+      .then(data => {
+      displayProducts(data.data);
+      updateResultsCount(data.meta);
+      updatePagination(data.links, data.meta);
+    })
   .catch(error => {
     console.error('Error loading products:', error);
     showProductsError();
@@ -103,6 +124,88 @@ function updateResultsCount(meta) {
     const total = meta.total || 0;
     resultsElement.textContent = `Showing ${from}–${to} of ${total} results`;
   }
+}
+
+function updatePagination(links, meta) {
+  if (!meta) return;
+  
+  const currentPage = meta.current_page;
+  const lastPage = meta.last_page || 10;
+  
+  updatePaginationButtons(currentPage, lastPage);
+  generatePaginationNumbers(currentPage, lastPage);
+}
+
+function updatePaginationButtons(currentPage, lastPage) {
+  const prevButton = document.getElementById('prevPage');
+  const nextButton = document.getElementById('nextPage');
+  
+  if (prevButton) {
+    prevButton.disabled = currentPage <= 1;
+  }
+  
+  if (nextButton) {
+    nextButton.disabled = currentPage >= lastPage;
+  }
+}
+
+function generatePaginationNumbers(currentPage, totalPages) {
+  const container = document.getElementById('paginationNumbers');
+  if (!container) return;
+  
+  const pages = calculatePaginationPages(currentPage, totalPages);
+  
+  container.innerHTML = pages.map(page => {
+    if (page === '...') {
+      return '<span class="pagination-ellipsis">...</span>';
+    } else {
+      const isActive = page === currentPage ? 'active' : '';
+      return `<button class="pagination-number ${isActive}" data-page="${page}">${page}</button>`;
+    }
+  }).join('');
+  
+  container.querySelectorAll('.pagination-number').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const page = parseInt(e.target.dataset.page);
+      if (page !== currentPage) {
+        loadProducts(page, currentFilters, currentSort);
+      }
+    });
+  });
+}
+
+function calculatePaginationPages(current, total) {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  
+  const pages = new Set();
+  
+  pages.add(1);
+  pages.add(2);
+  
+  pages.add(total - 1);
+  pages.add(total);
+  
+  pages.add(current - 1);
+  pages.add(current);
+  pages.add(current + 1);
+  
+  const sortedPages = [...pages].filter(p => p >= 1 && p <= total).sort((a, b) => a - b);
+  const result = [];
+  
+  for (let i = 0; i < sortedPages.length; i++) {
+    const currentPage = sortedPages[i];
+    const nextPage = sortedPages[i + 1];
+    
+    result.push(currentPage);
+    
+    if (nextPage && nextPage - currentPage > 1) {
+      result.push('...');
+    }
+  }
+  
+  return result;
 }
 
 function showProductsError() {
