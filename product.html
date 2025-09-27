@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - RedSeam Clothing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">
+        <img src="assets/nav/Logo.svg" alt="RedSeam Logo">
+      </div>
+      <div class="nav-right" id="navRight">
+        <div class="login-state" id="loginState">
+          <img src="assets/nav/LogIn.svg" alt="Log In" class="login">
+        </div>
+
+        <div class="user-state hidden" id="userState">
+          <img src="assets/nav/shopping-cart.svg" alt="Shopping Cart" class="cart">
+          <div class="profile-section">
+            <img id="userAvatar" src="assets/nav/default-avatar.jpg" alt="Profile" class="profile-pic">
+            <img src="assets/nav/chevron-down.svg" alt="Dropdown" class="arrow">
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="product-detail-main">
+    <div class="product-detail-container">
+      <div class="product-breadcrumb">
+        <span class="breadcrumb-link" id="backToProducts">Listing</span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current" id="productCategory">Product</span>
+      </div>
+
+      <div class="product-detail">
+        <div class="product-images">
+          <div class="product-thumbnails">
+            <div class="thumbnail active" data-image="0">
+              <img src="" alt="Product thumbnail" id="thumbnail-0">
+            </div>
+            <div class="thumbnail" data-image="1">
+              <img src="" alt="Product thumbnail" id="thumbnail-1">
+            </div>
+            <div class="thumbnail" data-image="2">
+              <img src="" alt="Product thumbnail" id="thumbnail-2">
+            </div>
+          </div>
+          <div class="product-main-image">
+            <img src="" alt="Product main image" id="mainImage">
+          </div>
+        </div>
+
+        <div class="product-info-section">
+
+          <h1 class="product-title" id="productTitle">Product Name</h1>
+
+          <span class="product-price" id="productPrice">$0.00</span>
+
+          <div class="product-options">
+            <div class="color-picker-section">
+              <div class="color-label">
+                <span class="color-text">Color:</span>
+                <span class="color-name" id="selectedColorName">Black</span>
+              </div>
+              <div class="color-options" id="colorOptions">
+              </div>
+            </div>
+
+            <div class="size-picker-section">
+              <div class="size-label">
+                <span class="size-text">Size:</span>
+                <span class="size-name" id="selectedSizeName"></span>
+              </div>
+              <div class="size-options" id="sizeOptions">
+              </div>
+            </div>
+
+            <div class="quantity-section">
+              <div class="quantity-label">
+                <span class="quantity-text">Quantity</span>
+              </div>
+              <div class="quantity-dropdown">
+                <div class="quantity-select" id="quantitySelect">
+                  <span class="quantity-display" id="quantityDisplay">1</span>
+                  <img src="assets/nav/chevron-down.svg" alt="Dropdown" class="quantity-arrow">
+                  <!-- Quantity Popup -->
+                  <div class="quantity-popup" id="quantityPopup">
+                    <div class="quantity-options">
+                      <div class="quantity-option active" data-quantity="1">1</div>
+                      <div class="quantity-option" data-quantity="2">2</div>
+                      <div class="quantity-option" data-quantity="3">3</div>
+                      <div class="quantity-option" data-quantity="4">4</div>
+                      <div class="quantity-option" data-quantity="5">5</div>
+                      <div class="quantity-option" data-quantity="6">6</div>
+                      <div class="quantity-option" data-quantity="7">7</div>
+                      <div class="quantity-option" data-quantity="8">8</div>
+                      <div class="quantity-option" data-quantity="9">9</div>
+                      <div class="quantity-option" data-quantity="10">10</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="product-actions">
+            <button class="add-to-cart-btn" id="addToCart">
+              <img src="assets/product/shopping-cart.svg" alt="Cart" class="cart-icon">
+              Add to Cart
+            </button>
+          </div>
+
+          <div class="product-divider">
+            <img src="assets/product/product-divider.svg" alt="Divider" class="divider-line">
+          </div>
+
+          <div class="product-description">
+            <div class="description-header">
+              <h3>Details</h3>
+              <img src="" alt="Brand Logo" class="brand-logo" id="brandLogo">
+            </div>
+            <div class="brand-info">
+              <span class="brand-label">Brand:</span>
+              <span class="brand-name" id="brandName"></span>
+            </div>
+            <p id="productDescription"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/nav/navigation.js"></script>
+  <script src="js/product/product-detail.js"></script>
+</body>
+
+</html>

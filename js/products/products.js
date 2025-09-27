@@ -6,6 +6,23 @@ window.currentFilters = {};
 window.currentSort = '';
 
 function initProducts() {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  if (urlParams.has('page')) {
+    window.currentPage = parseInt(urlParams.get('page'));
+  }
+  
+  if (urlParams.has('price_from') || urlParams.has('price_to')) {
+    window.currentFilters = {
+      priceFrom: urlParams.get('price_from'),
+      priceTo: urlParams.get('price_to')
+    };
+  }
+  
+  if (urlParams.has('sort')) {
+    window.currentSort = urlParams.get('sort');
+  }
+  
   loadProducts();
   initPagination();
 }
@@ -96,10 +113,32 @@ function displayProducts(products) {
   
   const productsHTML = products.map(product => createProductCard(product)).join('');
   container.innerHTML = productsHTML;
+  
+  addProductCardClickHandlers();
+}
+
+function addProductCardClickHandlers() {
+  const productCards = document.querySelectorAll('.product-card');
+  
+  productCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const productId = card.getAttribute('data-product-id');
+      if (productId) {
+        const currentState = {
+          page: window.currentPage || 1,
+          filters: window.currentFilters || {},
+          sort: window.currentSort || ''
+        };
+        sessionStorage.setItem('productsPageState', JSON.stringify(currentState));
+        
+        window.location.href = `product.html?id=${productId}`;
+      }
+    });
+  });
 }
 
 function createProductCard(product) {
-  const imageUrl = product.image || product.cover_image || product.photo || '';
+  const imageUrl = product.cover_image || '';
   
   return `
     <div class="product-card" data-product-id="${product.id}">
