@@ -106,7 +106,48 @@
     </div>
   </main>
 
+  <!-- Shopping Cart Panel -->
+  <div class="cart-overlay" id="cartOverlay">
+    <div class="cart-panel" id="cartPanel">
+      <div class="cart-header">
+        <h3 id="cartTitle">Shopping Cart (0)</h3>
+        <button class="cart-close" id="cartClose">
+          <img src="assets/products/x-mark.svg" alt="Close" class="close-icon">
+        </button>
+      </div>
+      <div class="cart-content" id="cartContent">
+        <div class="empty-cart" id="emptyCart">
+          <div class="empty-cart-icon">
+            <img src="assets/product/empty-cart.svg" alt="Empty Cart" class="empty-cart-image">
+          </div>
+          <h3 class="empty-cart-title">Ooops!</h3>
+          <p class="empty-cart-message">You've got nothing in your cart just yet...</p>
+          <button class="start-shopping-btn" id="startShoppingBtn">Start Shopping</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+      </div>
+      <div class="cart-footer" id="cartFooter" style="display: none;">
+        <div class="cart-summary">
+          <div class="cart-summary-row">
+            <span class="summary-label">Items subtotal</span>
+            <span class="summary-amount" id="subtotalAmount">$ 0.00</span>
+          </div>
+          <div class="cart-summary-row">
+            <span class="summary-label">Delivery</span>
+            <span class="summary-amount">$ 5</span>
+          </div>
+          <div class="cart-summary-row cart-total">
+            <span class="total-label">Total</span>
+            <span class="total-amount" id="totalAmount">$ 0.00</span>
+          </div>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">Go to checkout</button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/nav/navigation.js"></script>
+  <script src="js/cart/cart.js"></script>
   <script src="js/products/products.js"></script>
   <script src="js/products/filter.js"></script>
   <script src="js/products/sort.js"></script>

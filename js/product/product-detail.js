@@ -173,18 +173,24 @@ function initEventListeners() {
   const addToCartBtn = document.getElementById('addToCart');
   if (addToCartBtn) {
     addToCartBtn.addEventListener('click', () => {
-      addToCart();
+      handleAddToCart();
     });
   }
 }
 
-function addToCart() {
+function handleAddToCart() {
   if (!currentProduct) {
     console.error('No product data available');
     return;
   }
   
-  console.log('Adding to cart:', currentProduct.name);
+  const selectedSize = document.querySelector('.size-option.active').getAttribute('data-size');
+  const selectedColor = document.getElementById('selectedColorName').textContent;
+  const selectedQuantity = parseInt(document.getElementById('quantityDisplay').textContent);
+  
+  if (window.addToCart) {
+    window.addToCart(currentProduct, selectedSize, selectedColor, selectedQuantity);
+  }
 }
 
 function showProductError() {
