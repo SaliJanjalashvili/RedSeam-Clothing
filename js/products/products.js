@@ -1,8 +1,8 @@
 // PRODUCTS API MODULE
 // handles fetching and displaying products
 
-let currentPage = 1;
-let currentFilters = {};
+window.currentPage = 1;
+window.currentFilters = {};
 let currentSort = '';
 
 function initProducts() {
@@ -10,28 +10,30 @@ function initProducts() {
   initPagination();
 }
 
+window.loadProducts = loadProducts;
+
 function initPagination() {
   const prevButton = document.getElementById('prevPage');
   const nextButton = document.getElementById('nextPage');
   
   if (prevButton) {
     prevButton.addEventListener('click', () => {
-      if (currentPage > 1) {
-        loadProducts(currentPage - 1, currentFilters, currentSort);
+      if (window.currentPage > 1) {
+        loadProducts(window.currentPage - 1, window.currentFilters, currentSort);
       }
     });
   }
   
   if (nextButton) {
     nextButton.addEventListener('click', () => {
-      loadProducts(currentPage + 1, currentFilters, currentSort);
+      loadProducts(window.currentPage + 1, window.currentFilters, currentSort);
     });
   }
 }
 
-function loadProducts(page = 1, filters = {}, sort = '') {
-  currentPage = page;
-  currentFilters = filters;
+function loadProducts(page = window.currentPage, filters = window.currentFilters, sort = '') {
+  window.currentPage = page;
+  window.currentFilters = filters;
   currentSort = sort;
   
   const url = buildProductsUrl(page, filters, sort);

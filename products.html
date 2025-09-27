@@ -44,11 +44,36 @@
           <div class="filter-section">
             <img src="assets/products/filter.svg" alt="Filter" class="filter-icon">
             <span class="filter-text">Filter</span>
+            <!-- Filter Popup -->
+            <div class="filter-popup" id="filterPopup">
+              <h3 class="filter-popup-title">Select price</h3>
+              <div class="filter-inputs">
+                <div class="filter-input-group">
+                  <input type="number" placeholder="From *" class="filter-input" id="priceFrom">
+                </div>
+                <div class="filter-input-group">
+                  <input type="number" placeholder="To *" class="filter-input" id="priceTo">
+                </div>
+              </div>
+              <div class="filter-actions">
+                <button class="filter-apply-btn" id="applyFilter">Apply</button>
+              </div>
+            </div>
           </div>
           <div class="sort-section">
             <span class="sort-text">Sort by</span>
             <img src="assets/nav/chevron-down.svg" alt="Sort" class="sort-arrow">
           </div>
+        </div>
+      </div>
+
+      <!-- Filter Chip -->
+      <div class="filter-chip-container" id="filterChipContainer" style="display: none;">
+        <div class="filter-chip">
+          <span class="filter-chip-text" id="filterChipText">Price: $0 - $0</span>
+          <button class="filter-chip-close" id="clearFilter">
+            <img src="assets/products/x-mark.svg" alt="Clear filter" class="filter-chip-close-icon">
+          </button>
         </div>
       </div>
 
@@ -74,6 +99,7 @@
 
   <script src="js/nav/navigation.js"></script>
   <script src="js/products/products.js"></script>
+  <script src="js/products/filter.js"></script>
 </body>
 
 </html>
