@@ -31,7 +31,7 @@ function loadCartSummary() {
   const checkoutTotal = document.getElementById('checkoutTotal');
 
   if (cartItems.length === 0) {
-    window.location.href = 'products.html';
+    window.location.href = 'index.html';
     return;
   }
 
@@ -142,7 +142,7 @@ function handlePlaceOrder(e) {
   }
 
   sessionStorage.removeItem('cartItems');
-  window.location.href = 'products.html';
+  window.location.href = 'index.html';
 }
 
 if (document.readyState === 'loading') {

@@ -198,7 +198,7 @@ function submitRegistration(username, email, password, passwordConfirmation) {
     
     clearRegistrationForm();
     
-    window.location.href = 'products.html';
+    window.location.href = 'index.html';
   })
   .catch(error => {
     if (error.type === 'validation') {

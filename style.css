@@ -1634,6 +1634,7 @@ body {
 
 #zipCode {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 #zipCode::-webkit-outer-spin-button,

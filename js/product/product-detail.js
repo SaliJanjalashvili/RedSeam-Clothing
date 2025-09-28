@@ -7,7 +7,7 @@ function initProductDetail() {
   
   if (!productId) {
     console.error('No product ID provided');
-    window.location.href = 'products.html';
+    window.location.href = 'index.html';
     return;
   }
   
@@ -163,9 +163,9 @@ function initEventListeners() {
         }
         
         const queryString = params.toString();
-        window.location.href = queryString ? `products.html?${queryString}` : 'products.html';
+        window.location.href = queryString ? `index.html?${queryString}` : 'index.html';
       } else {
-        window.location.href = 'products.html';
+        window.location.href = 'index.html';
       }
     });
   }

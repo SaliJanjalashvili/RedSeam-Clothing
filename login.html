@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedSeam Clothing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">
+        <img src="assets/nav/Logo.svg" alt="RedSeam Logo">
+      </div>
+      <div class="nav-right">
+        <div class="login">
+          <img src="assets/nav/LogIn.svg" alt="Log In">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="login-page">
+    <div class="login-container">
+      <div class="login-image">
+        <img src="assets/login/Img.png" alt="Login Image">
+      </div>
+      <div class="login-form">
+        <!-- Login Form -->
+        <div class="login-form-content">
+          <h2 class="form-title">Log in</h2>
+          <form class="form-container" novalidate>
+            <div class="input-fields">
+              <input type="email" placeholder="Email *">
+              <div class="password-field">
+                <input type="text" placeholder="Password *">
+                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+              </div>
+            </div>
+            <div class="button-section">
+              <button type="submit" class="login-btn">Log In</button>
+              <p class="register-link">Not a member? <span id="showRegister">Register</span></p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="registration-form-content hidden">
+          <h2 class="form-title">Registration</h2>
+          <form class="form-container" novalidate>
+            <div class="upload-image">
+              <input type="file" id="imageUpload" accept="image/*" class="hidden">
+              <div class="avatar-container" id="avatarContainer">
+                <img src="assets/login/avatar.svg" alt="Upload avatar" class="avatar-icon" id="avatarIcon">
+                <img id="previewImage" class="preview-image hidden" alt="Preview">
+              </div>
+              <div class="upload-controls">
+                <span class="upload-text" id="uploadText">Upload image</span>
+                <span class="remove-image hidden" id="removeImage">Remove</span>
+              </div>
+            </div>
+            <div class="input-fields registration-fields">
+              <input type="text" placeholder="Username *">
+              <input type="email" placeholder="Email *">
+              <div class="password-field">
+                <input type="text" placeholder="Password *">
+                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+              </div>
+              <div class="password-field">
+                <input type="text" placeholder="Confirm password *">
+                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+              </div>
+            </div>
+            <div class="button-section">
+              <button type="submit" class="login-btn">Register</button>
+              <p class="register-link">Already member? <span id="showLogin">Log in</span></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/login/auth.js"></script>
+  <script src="js/login/upload.js"></script>
+  <script src="js/login/placeholder.js"></script>
+  <script src="js/login/registration.js"></script>
+  <script src="js/login/login.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

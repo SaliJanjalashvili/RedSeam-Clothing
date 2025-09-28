@@ -95,7 +95,7 @@ function submitLogin(email, password) {
     sessionStorage.setItem('authToken', data.token);
     sessionStorage.setItem('user', JSON.stringify(data.user));
     
-    window.location.href = 'products.html';
+    window.location.href = 'index.html';
   })
   .catch(error => {
     if (error.type === 'validation') {

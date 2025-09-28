@@ -4,7 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RedSeam Clothing</title>
+  <title>Products - RedSeam Clothing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,81 +17,140 @@
       <div class="logo">
         <img src="assets/nav/Logo.svg" alt="RedSeam Logo">
       </div>
-      <div class="nav-right">
-        <div class="login">
-          <img src="assets/nav/LogIn.svg" alt="Log In">
+      <div class="nav-right" id="navRight">
+        <div class="login-state" id="loginState">
+          <img src="assets/nav/LogIn.svg" alt="Log In" class="login">
+        </div>
+
+        <div class="user-state hidden" id="userState">
+          <img src="assets/nav/shopping-cart.svg" alt="Shopping Cart" class="cart">
+          <div class="profile-section">
+            <img id="userAvatar" src="assets/nav/default-avatar.jpg" alt="Profile" class="profile-pic">
+            <img src="assets/nav/chevron-down.svg" alt="Dropdown" class="arrow">
+          </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <main class="login-page">
-    <div class="login-container">
-      <div class="login-image">
-        <img src="assets/login/Img.png" alt="Login Image">
-      </div>
-      <div class="login-form">
-        <!-- Login Form -->
-        <div class="login-form-content">
-          <h2 class="form-title">Log in</h2>
-          <form class="form-container" novalidate>
-            <div class="input-fields">
-              <input type="email" placeholder="Email *">
-              <div class="password-field">
-                <input type="text" placeholder="Password *">
-                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
+  <main class="products-main">
+    <div class="products-container">
+      <!-- Products Header -->
+      <div class="products-header">
+        <h1 class="products-title">Products</h1>
+        <div class="products-controls">
+          <span class="results-count">Showing 1–10 of 100 results</span>
+          <img src="assets/products/divider.svg" alt="Divider" class="divider">
+          <div class="filter-section">
+            <img src="assets/products/filter.svg" alt="Filter" class="filter-icon">
+            <span class="filter-text">Filter</span>
+            <!-- Filter Popup -->
+            <div class="filter-popup" id="filterPopup">
+              <h3 class="filter-popup-title">Select price</h3>
+              <div class="filter-inputs">
+                <div class="filter-input-group">
+                  <input type="number" placeholder="From *" class="filter-input" id="priceFrom">
+                </div>
+                <div class="filter-input-group">
+                  <input type="number" placeholder="To *" class="filter-input" id="priceTo">
+                </div>
+              </div>
+              <div class="filter-actions">
+                <button class="filter-apply-btn" id="applyFilter">Apply</button>
               </div>
             </div>
-            <div class="button-section">
-              <button type="submit" class="login-btn">Log In</button>
-              <p class="register-link">Not a member? <span id="showRegister">Register</span></p>
+          </div>
+          <div class="sort-section">
+            <span class="sort-text">Sort by</span>
+            <img src="assets/nav/chevron-down.svg" alt="Sort" class="sort-arrow">
+            <!-- Sort Popup -->
+            <div class="sort-popup" id="sortPopup">
+              <h3 class="sort-popup-title">Sort by</h3>
+              <div class="sort-options">
+                <div class="sort-option" data-sort="">New products first</div>
+                <div class="sort-option" data-sort="price">Price, low to high</div>
+                <div class="sort-option" data-sort="-price">Price, high to low</div>
+              </div>
             </div>
-          </form>
+          </div>
         </div>
+      </div>
 
-        <!-- Registration Form -->
-        <div class="registration-form-content hidden">
-          <h2 class="form-title">Registration</h2>
-          <form class="form-container" novalidate>
-            <div class="upload-image">
-              <input type="file" id="imageUpload" accept="image/*" class="hidden">
-              <div class="avatar-container" id="avatarContainer">
-                <img src="assets/login/avatar.svg" alt="Upload avatar" class="avatar-icon" id="avatarIcon">
-                <img id="previewImage" class="preview-image hidden" alt="Preview">
-              </div>
-              <div class="upload-controls">
-                <span class="upload-text" id="uploadText">Upload image</span>
-                <span class="remove-image hidden" id="removeImage">Remove</span>
-              </div>
-            </div>
-            <div class="input-fields registration-fields">
-              <input type="text" placeholder="Username *">
-              <input type="email" placeholder="Email *">
-              <div class="password-field">
-                <input type="text" placeholder="Password *">
-                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
-              </div>
-              <div class="password-field">
-                <input type="text" placeholder="Confirm password *">
-                <img src="assets/login/eye.svg" alt="Show password" class="eye-icon">
-              </div>
-            </div>
-            <div class="button-section">
-              <button type="submit" class="login-btn">Register</button>
-              <p class="register-link">Already member? <span id="showLogin">Log in</span></p>
-            </div>
-          </form>
+      <!-- Filter Chip -->
+      <div class="filter-chip-container" id="filterChipContainer" style="display: none;">
+        <div class="filter-chip">
+          <span class="filter-chip-text" id="filterChipText">Price: $0 - $0</span>
+          <button class="filter-chip-close" id="clearFilter">
+            <img src="assets/products/x-mark.svg" alt="Clear filter" class="filter-chip-close-icon">
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Cards Container -->
+      <div class="product-cards-container">
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container">
+        <div class="pagination">
+          <button class="pagination-arrow" id="prevPage" disabled>
+            <img src="assets/products/chevron-left.svg" alt="Previous">
+          </button>
+          <div class="pagination-numbers" id="paginationNumbers">
+          </div>
+          <button class="pagination-arrow" id="nextPage">
+            <img src="assets/products/chevron-right.svg" alt="Next">
+          </button>
         </div>
       </div>
     </div>
   </main>
 
-  <script src="js/login/auth.js"></script>
-  <script src="js/login/upload.js"></script>
-  <script src="js/login/placeholder.js"></script>
-  <script src="js/login/registration.js"></script>
-  <script src="js/login/login.js"></script>
-  <script src="script.js"></script>
+  <!-- Shopping Cart Panel -->
+  <div class="cart-overlay" id="cartOverlay">
+    <div class="cart-panel" id="cartPanel">
+      <div class="cart-header">
+        <h3 id="cartTitle">Shopping Cart (0)</h3>
+        <button class="cart-close" id="cartClose">
+          <img src="assets/products/x-mark.svg" alt="Close" class="close-icon">
+        </button>
+      </div>
+      <div class="cart-content" id="cartContent">
+        <div class="empty-cart" id="emptyCart">
+          <div class="empty-cart-icon">
+            <img src="assets/product/empty-cart.svg" alt="Empty Cart" class="empty-cart-image">
+          </div>
+          <h3 class="empty-cart-title">Ooops!</h3>
+          <p class="empty-cart-message">You've got nothing in your cart just yet...</p>
+          <button class="start-shopping-btn" id="startShoppingBtn">Start Shopping</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+      </div>
+      <div class="cart-footer" id="cartFooter" style="display: none;">
+        <div class="cart-summary">
+          <div class="cart-summary-row">
+            <span class="summary-label">Items subtotal</span>
+            <span class="summary-amount" id="subtotalAmount">$ 0.00</span>
+          </div>
+          <div class="cart-summary-row">
+            <span class="summary-label">Delivery</span>
+            <span class="summary-amount">$ 5</span>
+          </div>
+          <div class="cart-summary-row cart-total">
+            <span class="total-label">Total</span>
+            <span class="total-amount" id="totalAmount">$ 0.00</span>
+          </div>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">Go to checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/nav/navigation.js"></script>
+  <script src="js/cart/cart.js"></script>
+  <script src="js/products/products.js"></script>
+  <script src="js/products/filter.js"></script>
+  <script src="js/products/sort.js"></script>
 </body>
 
 </html>
