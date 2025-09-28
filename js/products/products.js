@@ -37,6 +37,9 @@ function initPagination() {
     prevButton.addEventListener('click', () => {
       if (window.currentPage > 1) {
         loadProducts(window.currentPage - 1, window.currentFilters, window.currentSort);
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 200);
       }
     });
   }
@@ -44,6 +47,9 @@ function initPagination() {
   if (nextButton) {
     nextButton.addEventListener('click', () => {
       loadProducts(window.currentPage + 1, window.currentFilters, window.currentSort);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 200);
     });
   }
 }
@@ -210,6 +216,9 @@ function generatePaginationNumbers(currentPage, totalPages) {
       const page = parseInt(e.target.dataset.page);
       if (page !== currentPage) {
         loadProducts(page, currentFilters, currentSort);
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 200);
       }
     });
   });
