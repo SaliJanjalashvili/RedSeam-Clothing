@@ -96,9 +96,43 @@ function validateField(fieldId, value) {
     case 'address':
       return value.length >= 3;
     case 'zipCode':
-      return /^\d+$/.test(value);
+      return /^\d{4}$/.test(value);
     default:
       return value.length > 0;
+  }
+}
+
+function getFieldDisplayName(fieldId) {
+  switch (fieldId) {
+    case 'firstName':
+      return 'Name';
+    case 'lastName':
+      return 'Surname';
+    case 'email':
+      return 'Email';
+    case 'address':
+      return 'Address';
+    case 'zipCode':
+      return 'ZIP code';
+    default:
+      return 'Field';
+  }
+}
+
+function getValidationErrorMessage(fieldId) {
+  switch (fieldId) {
+    case 'firstName':
+      return 'Name must be at least 3 characters';
+    case 'lastName':
+      return 'Surname must be at least 3 characters';
+    case 'email':
+      return 'Please enter a valid email format';
+    case 'address':
+      return 'Address must be at least 3 characters';
+    case 'zipCode':
+      return 'ZIP code must be exactly 4 digits';
+    default:
+      return 'Invalid format';
   }
 }
 
@@ -108,8 +142,37 @@ function clearFieldErrors() {
     const input = document.getElementById(fieldId);
     if (input) {
       input.style.borderColor = '';
+      const existingError = input.parentNode.querySelector('.error-message');
+      if (existingError) {
+        existingError.remove();
+      }
     }
   });
+}
+
+function showError(fieldId, message) {
+  const input = document.getElementById(fieldId);
+  if (input) {
+    input.style.borderColor = 'var(--red)';
+    
+    const existingError = input.parentNode.querySelector('.error-message');
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    errorDiv.style.position = 'absolute';
+    errorDiv.style.top = '52px';
+    errorDiv.style.left = '6px';
+    errorDiv.style.color = 'var(--red)';
+    errorDiv.style.fontSize = '10px';
+    errorDiv.style.fontWeight = '300';
+    
+    input.parentNode.style.position = 'relative';
+    input.parentNode.appendChild(errorDiv);
+  }
 }
 
 function handlePlaceOrder(e) {
@@ -125,12 +188,18 @@ function handlePlaceOrder(e) {
     const input = document.getElementById(fieldId);
     const value = input?.value.trim() || '';
     
-    if (!value || !validateField(fieldId, value)) {
-      if (input) {
-        input.style.borderColor = 'var(--red)';
-        if (!firstErrorField) {
-          firstErrorField = input;
-        }
+    if (!value) {
+      const fieldName = getFieldDisplayName(fieldId);
+      showError(fieldId, `${fieldName} is required`);
+      if (!firstErrorField) {
+        firstErrorField = input;
+      }
+      hasErrors = true;
+    } else if (!validateField(fieldId, value)) {
+      const errorMessage = getValidationErrorMessage(fieldId);
+      showError(fieldId, errorMessage);
+      if (!firstErrorField) {
+        firstErrorField = input;
       }
       hasErrors = true;
     }
