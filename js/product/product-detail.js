@@ -189,7 +189,16 @@ function handleAddToCart() {
   const selectedQuantity = parseInt(document.getElementById('quantityDisplay').textContent);
   
   if (window.addToCart) {
-    window.addToCart(currentProduct, selectedSize, selectedColor, selectedQuantity);
+    let selectedImage = currentProduct.cover_image;
+    
+    if (window.productImageColorPairs) {
+      const matchingPair = window.productImageColorPairs.find(pair => pair.color === selectedColor);
+      if (matchingPair) {
+        selectedImage = matchingPair.image;
+      }
+    }
+    
+    window.addToCart(currentProduct, selectedSize, selectedColor, selectedQuantity, selectedImage);
   }
 }
 

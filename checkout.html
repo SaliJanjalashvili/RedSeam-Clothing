@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - RedSeam Clothing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="nav-left">
+        <img src="assets/nav/Logo.svg" alt="RedSeam Logo" class="logo">
+      </div>
+      <div class="nav-right" id="navRight">
+        <div class="login-state" id="loginState">
+          <img src="assets/nav/LogIn.svg" alt="Log In" class="login">
+        </div>
+        <div class="user-state hidden" id="userState">
+          <img src="assets/nav/shopping-cart.svg" alt="Shopping Cart" class="cart">
+          <div class="user-info">
+            <img src="assets/nav/default-avatar.jpg" alt="User Avatar" class="user-avatar" id="userAvatar">
+            <img src="assets/nav/chevron-down.svg" alt="Dropdown" class="dropdown-arrow">
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="checkout-main">
+    <h1 class="checkout-title">Checkout</h1>
+    <div class="checkout-container">
+      <form class="checkout-form" id="checkoutForm">
+        <h2 class="section-title">Order Details</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" placeholder="Name" class="form-input" id="firstName" required>
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Surname" class="form-input" id="lastName" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-with-icon">
+            <img src="assets/checkout/envelope.svg" alt="Email" class="input-icon">
+            <input type="email" placeholder="Email" class="form-input" id="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" placeholder="address" class="form-input" id="address" required>
+          </div>
+          <div class="form-group">
+            <input type="number" placeholder="ZIP code" class="form-input" id="zipCode" required>
+          </div>
+        </div>
+      </form>
+
+      <div class="checkout-summary-section">
+        <div class="summary-items" id="summaryItems">
+        </div>
+
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span class="summary-label">Items subtotal</span>
+            <span class="summary-amount" id="checkoutSubtotal">$ 0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Delivery</span>
+            <span class="summary-amount">$ 5</span>
+          </div>
+          <div class="summary-row summary-total">
+            <span class="total-label">Total</span>
+            <span class="total-amount" id="checkoutTotal">$ 0</span>
+          </div>
+        </div>
+
+        <button class="place-order-btn" id="placeOrderBtn">Pay</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Shopping Cart Panel -->
+  <div class="cart-overlay" id="cartOverlay">
+    <div class="cart-panel" id="cartPanel">
+      <div class="cart-header">
+        <h3 id="cartTitle">Shopping Cart (0)</h3>
+        <button class="cart-close" id="cartClose">
+          <img src="assets/products/x-mark.svg" alt="Close" class="close-icon">
+        </button>
+      </div>
+      <div class="cart-content" id="cartContent">
+        <div class="empty-cart" id="emptyCart">
+          <div class="empty-cart-icon">
+            <img src="assets/product/empty-cart.svg" alt="Empty Cart" class="empty-cart-image">
+          </div>
+          <h3 class="empty-cart-title">Ooops!</h3>
+          <p class="empty-cart-message">You've got nothing in your cart just yet...</p>
+          <button class="start-shopping-btn" id="startShoppingBtn">Start Shopping</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+      </div>
+      <div class="cart-footer" id="cartFooter" style="display: none;">
+        <div class="cart-summary">
+          <div class="cart-summary-row">
+            <span class="summary-label">Items subtotal</span>
+            <span class="summary-amount" id="subtotalAmount">$ 0</span>
+          </div>
+          <div class="cart-summary-row">
+            <span class="summary-label">Delivery</span>
+            <span class="summary-amount">$ 5</span>
+          </div>
+          <div class="cart-summary-row cart-total">
+            <span class="total-label">Total</span>
+            <span class="total-amount" id="totalAmount">$ 0</span>
+          </div>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">Go to checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/nav/navigation.js"></script>
+  <script src="js/cart/cart.js"></script>
+  <script src="js/checkout/checkout.js"></script>
+</body>
+
+</html>
