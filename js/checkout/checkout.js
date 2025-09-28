@@ -47,15 +47,19 @@ function loadCartSummary() {
         <div class="summary-item-options">${item.selectedSize}</div>
         <div class="summary-item-quantity">
           <div class="cart-item-quantity-controls">
-            <button class="quantity-btn ${item.quantity <= 1 ? 'disabled' : ''}" onclick="updateQuantity(${index}, ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>
+            <button class="quantity-btn ${item.quantity <= 1 ? 'disabled' : ''}" 
+                    onclick="updateQuantity(${item.id}, '${item.selectedSize}', '${item.selectedColor}', Math.max(1, ${item.quantity - 1}))" 
+                    ${item.quantity <= 1 ? 'disabled' : ''}>
               <img src="assets/product/minus.svg" alt="Decrease" class="quantity-icon">
             </button>
             <span class="quantity-value">${item.quantity}</span>
-            <button class="quantity-btn ${item.quantity >= 10 ? 'disabled' : ''}" onclick="updateQuantity(${index}, ${item.quantity + 1})" ${item.quantity >= 10 ? 'disabled' : ''}>
+            <button class="quantity-btn ${item.quantity >= 10 ? 'disabled' : ''}" 
+                    onclick="updateQuantity(${item.id}, '${item.selectedSize}', '${item.selectedColor}', Math.min(10, ${item.quantity + 1}))" 
+                    ${item.quantity >= 10 ? 'disabled' : ''}>
               <img src="assets/product/plus.svg" alt="Increase" class="quantity-icon">
             </button>
           </div>
-          <button class="remove-text-btn" onclick="removeFromCart(${index})">Remove</button>
+          <button class="remove-text-btn" onclick="removeFromCart(${item.id}, '${item.selectedSize}', '${item.selectedColor}')">Remove</button>
         </div>
       </div>
     </div>

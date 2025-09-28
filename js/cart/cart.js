@@ -1,5 +1,6 @@
 // Shopping Cart Module
 let cartItems = [];
+let isUpdating = false;
 
 function findImageForColor(product, selectedColor, selectedImage) {
   if (selectedImage) {
@@ -141,7 +142,7 @@ function closeCartPanel() {
       cartOverlay.style.display = 'none';
       cartPanel.classList.remove('closing');
       document.body.style.overflow = 'auto';
-    }, 300);
+    }, 100);
   }
 }
 
@@ -159,8 +160,7 @@ async function addToCart(product, selectedSize, selectedColor, quantity = 1, sel
   const existingItemIndex = cartItems.findIndex(item => 
     item.id === product.id && 
     item.selectedSize === selectedSize && 
-    item.selectedColor === selectedColor &&
-    !item._isBeingRemoved
+    item.selectedColor === selectedColor
   );
 
   const itemImage = findImageForColor(product, selectedColor, selectedImage);
@@ -237,7 +237,7 @@ async function addToCart(product, selectedSize, selectedColor, quantity = 1, sel
   }
 }
 
-async function removeFromCart(index) {
+async function removeFromCart(itemId, selectedSize, selectedColor) {
   const user = sessionStorage.getItem('user');
   const token = sessionStorage.getItem('authToken');
   
@@ -246,71 +246,31 @@ async function removeFromCart(index) {
     return;
   }
 
-  if (index < 0 || index >= cartItems.length) {
+  const itemIndex = cartItems.findIndex(item => 
+    item.id === itemId && 
+    item.selectedSize === selectedSize && 
+    item.selectedColor === selectedColor &&
+    !item._isBeingRemoved
+  );
+
+  if (itemIndex === -1) {
+    console.warn('Item not found in cart for removal');
     return;
   }
 
-  const item = cartItems[index];
-  const removedItem = cartItems.splice(index, 1)[0];
-
-  removedItem._isBeingRemoved = true;
-
-  sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-  updateCartDisplay();
+  const item = cartItems[itemIndex];
   
-  if (typeof window.refreshCheckoutSummary === 'function') {
-    window.refreshCheckoutSummary();
-  }
-
-  try {
-    const response = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${item.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (response.ok || response.status === 204) {
-      console.log('Item removed from server cart');
-    } else if (response.status === 401) {
-      sessionStorage.removeItem('user');
-      sessionStorage.removeItem('authToken');
-      window.location.href = 'login.html';
-    } else {
-      console.error('Failed to remove from server cart:', response.status);
-      delete removedItem._isBeingRemoved;
-      cartItems.splice(index, 0, removedItem);
-      sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-      updateCartDisplay();
-    }
-  } catch (error) {
-    console.error('Error removing from server cart:', error);
-    delete removedItem._isBeingRemoved;
-    cartItems.splice(index, 0, removedItem);
-    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-    updateCartDisplay();
-  }
-}
-
-async function updateQuantity(index, newQuantity) {
-  const user = sessionStorage.getItem('user');
-  const token = sessionStorage.getItem('authToken');
+  const backupCartItems = [...cartItems];
   
-  if (!user || !token) {
-    window.location.href = 'login.html';
-    return;
-  }
+  cartItems.splice(itemIndex, 1);
 
-  if (newQuantity < 1 || newQuantity > 10 || index < 0 || index >= cartItems.length) {
-    return;
-  }
+  const cleanCartItems = cartItems.map(item => {
+    const cleanItem = { ...item };
+    delete cleanItem._isBeingRemoved;
+    return cleanItem;
+  });
 
-  const item = cartItems[index];
-  const oldQuantity = item.quantity;
-  
-  cartItems[index].quantity = newQuantity;
-  sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+  sessionStorage.setItem('cartItems', JSON.stringify(cleanCartItems));
   updateCartDisplay();
   
   if (typeof window.refreshCheckoutSummary === 'function') {
@@ -327,37 +287,197 @@ async function updateQuantity(index, newQuantity) {
     });
 
     if (deleteResponse.ok || deleteResponse.status === 204) {
-      const addResponse = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${item.id}`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          quantity: newQuantity,
-          size: item.selectedSize,
-          color: item.selectedColor
-        })
-      });
+      console.log('All variants of product removed from server cart');
+      
+      const remainingVariants = cartItems.filter(cartItem => cartItem.id === itemId);
+      
+      for (const variant of remainingVariants) {
+        try {
+          const addResponse = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${variant.id}`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              quantity: variant.quantity,
+              size: variant.selectedSize,
+              color: variant.selectedColor
+            })
+          });
 
-      if (addResponse.ok) {
-        console.log('Quantity updated on server');
-      } else {
-        throw new Error('Failed to re-add item with new quantity');
+          if (!addResponse.ok) {
+            console.error(`Failed to re-add variant ${variant.selectedSize}/${variant.selectedColor}:`, addResponse.status);
+          }
+        } catch (addError) {
+          console.error(`Error re-adding variant ${variant.selectedSize}/${variant.selectedColor}:`, addError);
+        }
       }
+      
+      console.log('Successfully removed specific variant and re-added remaining variants');
+      
+      setTimeout(() => {
+        // loadCartFromServer();
+      }, 100);
+      
+    } else if (deleteResponse.status === 401) {
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('authToken');
+      window.location.href = 'login.html';
+      return;
     } else {
-      throw new Error('Failed to remove item for quantity update');
+      throw new Error(`Server deletion failed: ${deleteResponse.status}`);
     }
   } catch (error) {
-    console.error('Error updating quantity on server:', error);
-    cartItems[index].quantity = oldQuantity;
-    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+    console.error('Error removing from server cart:', error);
+    
+    cartItems.length = 0;
+    cartItems.push(...backupCartItems);
+    
+    const revertedCleanItems = cartItems.map(item => {
+      const cleanItem = { ...item };
+      delete cleanItem._isBeingRemoved;
+      return cleanItem;
+    });
+    
+    sessionStorage.setItem('cartItems', JSON.stringify(revertedCleanItems));
     updateCartDisplay();
     
     if (typeof window.refreshCheckoutSummary === 'function') {
       window.refreshCheckoutSummary();
     }
+    
+    alert('Failed to remove item from cart. Please try again.');
+  }
+}
+
+async function updateQuantity(itemId, selectedSize, selectedColor, newQuantity) {
+  const user = sessionStorage.getItem('user');
+  const token = sessionStorage.getItem('authToken');
+  
+  if (!user || !token) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  if (isUpdating) {
+    return;
+  }
+
+  if (newQuantity < 1 || newQuantity > 10) {
+    return;
+  }
+
+  const itemIndex = cartItems.findIndex(item => 
+    item.id === itemId && 
+    item.selectedSize === selectedSize && 
+    item.selectedColor === selectedColor &&
+    !item._isBeingRemoved
+  );
+
+  if (itemIndex === -1) {
+    console.warn('Item not found in cart for quantity update');
+    return;
+  }
+
+  const item = cartItems[itemIndex];
+  const oldQuantity = item.quantity;
+  
+  if (oldQuantity === newQuantity) {
+    return;
+  }
+
+  isUpdating = true;
+
+  cartItems[itemIndex].quantity = newQuantity;
+  
+  const cleanCartItems = cartItems.map(item => {
+    const cleanItem = { ...item };
+    delete cleanItem._isBeingRemoved;
+    return cleanItem;
+  });
+  
+  sessionStorage.setItem('cartItems', JSON.stringify(cleanCartItems));
+  updateCartDisplay();
+  
+  if (typeof window.refreshCheckoutSummary === 'function') {
+    window.refreshCheckoutSummary();
+  }
+
+  try {
+    const deleteResponse = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${item.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (deleteResponse.ok || deleteResponse.status === 204) {
+      console.log('All variants of product removed from server for quantity update');
+      
+      const allVariants = cartItems.filter(cartItem => cartItem.id === itemId);
+      
+      for (const variant of allVariants) {
+        try {
+          const addResponse = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${variant.id}`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              quantity: variant.quantity,
+              size: variant.selectedSize,
+              color: variant.selectedColor
+            })
+          });
+
+          if (!addResponse.ok) {
+            console.error(`Failed to re-add variant ${variant.selectedSize}/${variant.selectedColor}:`, addResponse.status);
+          }
+        } catch (addError) {
+          console.error(`Error re-adding variant ${variant.selectedSize}/${variant.selectedColor}:`, addError);
+        }
+      }
+      
+      console.log('Quantity updated on server successfully');
+      
+      setTimeout(() => {
+        // loadCartFromServer();
+      }, 100);
+      
+    } else if (deleteResponse.status === 401) {
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('authToken');
+      window.location.href = 'login.html';
+      return;
+    } else {
+      throw new Error(`Server deletion failed: ${deleteResponse.status}`);
+    }
+  } catch (error) {
+    console.error('Error updating quantity on server:', error);
+    
+    cartItems[itemIndex].quantity = oldQuantity;
+    
+    const revertedCleanItems = cartItems.map(item => {
+      const cleanItem = { ...item };
+      delete cleanItem._isBeingRemoved;
+      return cleanItem;
+    });
+    
+    sessionStorage.setItem('cartItems', JSON.stringify(revertedCleanItems));
+    updateCartDisplay();
+    
+    if (typeof window.refreshCheckoutSummary === 'function') {
+      window.refreshCheckoutSummary();
+    }
+  } finally {
+    setTimeout(() => {
+      isUpdating = false;
+    }, 100);
   }
 }
 
@@ -394,15 +514,19 @@ function updateCartDisplay() {
           <p class="cart-item-size">${item.selectedSize}</p>
           <div class="cart-item-bottom-row">
             <div class="cart-item-quantity-controls">
-              <button class="quantity-btn ${item.quantity <= 1 ? 'disabled' : ''}" onclick="updateQuantity(${index}, ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>
+              <button class="quantity-btn ${item.quantity <= 1 ? 'disabled' : ''}" 
+                      onclick="updateQuantity(${item.id}, '${item.selectedSize}', '${item.selectedColor}', Math.max(1, ${item.quantity - 1}))" 
+                      ${item.quantity <= 1 ? 'disabled' : ''}>
                 <img src="assets/product/minus.svg" alt="Decrease" class="quantity-icon">
               </button>
               <span class="quantity-value">${item.quantity}</span>
-              <button class="quantity-btn ${item.quantity >= 10 ? 'disabled' : ''}" onclick="updateQuantity(${index}, ${item.quantity + 1})" ${item.quantity >= 10 ? 'disabled' : ''}>
+              <button class="quantity-btn ${item.quantity >= 10 ? 'disabled' : ''}" 
+                      onclick="updateQuantity(${item.id}, '${item.selectedSize}', '${item.selectedColor}', Math.min(10, ${item.quantity + 1}))" 
+                      ${item.quantity >= 10 ? 'disabled' : ''}>
                 <img src="assets/product/plus.svg" alt="Increase" class="quantity-icon">
               </button>
             </div>
-            <button class="remove-text-btn" onclick="removeFromCart(${index})">Remove</button>
+            <button class="remove-text-btn" onclick="removeFromCart(${item.id}, '${item.selectedSize}', '${item.selectedColor}')">Remove</button>
           </div>
         </div>
       </div>
