@@ -209,9 +209,9 @@ async function addToCart(product, selectedSize, selectedColor, quantity = 1, sel
       })
     });
 
-    if (response.ok) {
-      console.log('Item synced with server cart');
-    } else if (response.status === 401) {
+          if (response.ok) {
+        // Item synced successfully
+      } else if (response.status === 401) {
       sessionStorage.removeItem('user');
       sessionStorage.removeItem('authToken');
       window.location.href = 'login.html';
@@ -287,8 +287,6 @@ async function removeFromCart(itemId, selectedSize, selectedColor) {
     });
 
     if (deleteResponse.ok || deleteResponse.status === 204) {
-      console.log('All variants of product removed from server cart');
-      
       const remainingVariants = cartItems.filter(cartItem => cartItem.id === itemId);
       
       for (const variant of remainingVariants) {
@@ -314,12 +312,6 @@ async function removeFromCart(itemId, selectedSize, selectedColor) {
           console.error(`Error re-adding variant ${variant.selectedSize}/${variant.selectedColor}:`, addError);
         }
       }
-      
-      console.log('Successfully removed specific variant and re-added remaining variants');
-      
-      setTimeout(() => {
-        // loadCartFromServer();
-      }, 100);
       
     } else if (deleteResponse.status === 401) {
       sessionStorage.removeItem('user');
@@ -415,7 +407,7 @@ async function updateQuantity(itemId, selectedSize, selectedColor, newQuantity) 
     });
 
     if (deleteResponse.ok || deleteResponse.status === 204) {
-      console.log('All variants of product removed from server for quantity update');
+      
       
       const allVariants = cartItems.filter(cartItem => cartItem.id === itemId);
       
@@ -443,11 +435,6 @@ async function updateQuantity(itemId, selectedSize, selectedColor, newQuantity) 
         }
       }
       
-      console.log('Quantity updated on server successfully');
-      
-      setTimeout(() => {
-        // loadCartFromServer();
-      }, 100);
       
     } else if (deleteResponse.status === 401) {
       sessionStorage.removeItem('user');

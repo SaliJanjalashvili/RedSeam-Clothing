@@ -273,8 +273,6 @@ async function submitCheckout() {
       zip_code: document.getElementById('zipCode')?.value.trim()
     };
 
-    console.log('Submitting checkout with data:', formData);
-
     const response = await fetch('https://api.redseam.redberryinternship.ge/api/cart/checkout', {
       method: 'POST',
       headers: {
@@ -287,7 +285,6 @@ async function submitCheckout() {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Checkout successful:', data);
       
       sessionStorage.removeItem('cartItems');
       

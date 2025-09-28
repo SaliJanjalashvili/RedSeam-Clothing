@@ -68,12 +68,10 @@ function applyFilter() {
   const priceTo = document.getElementById('priceTo').value;
   
   if (!priceFrom || !priceTo) {
-    console.log('Both price fields are required');
     return;
   }
   
   if (parseFloat(priceFrom) > parseFloat(priceTo)) {
-    console.log('From price cannot be higher than To price');
     return;
   }
   
@@ -189,9 +187,6 @@ function createCustomPlaceholder(input, placeholderText) {
   input.addEventListener('focus', togglePlaceholder);
   input.addEventListener('blur', togglePlaceholder);
   input.addEventListener('change', togglePlaceholder);
-  
-  setTimeout(togglePlaceholder, 100);
-  setTimeout(togglePlaceholder, 500);
   
   togglePlaceholder();
 }

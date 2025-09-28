@@ -114,14 +114,6 @@ body {
   cursor: pointer;
 }
 
-.profile-pic {
-  width: 40px;
-  height: 40px;
-  background-color: var(--light-gray);
-  border-radius: 50%;
-  cursor: pointer;
-}
-
 .user-state {
   width: 108px;
   height: 40px;
@@ -193,6 +185,7 @@ body {
 .profile-pic {
   width: 40px;
   height: 40px;
+  background-color: var(--light-gray);
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;

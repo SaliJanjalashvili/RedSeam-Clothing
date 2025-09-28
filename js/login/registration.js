@@ -189,10 +189,6 @@ function submitRegistration(username, email, password, passwordConfirmation) {
     }
   })
   .then(data => {
-    console.log('Registration successful!');
-    console.log('User registered:', data.user);
-    console.log('Token:', data.token);
-    
     sessionStorage.setItem('authToken', data.token);
     sessionStorage.setItem('user', JSON.stringify(data.user));
     

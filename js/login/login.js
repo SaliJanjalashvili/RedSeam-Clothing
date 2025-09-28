@@ -88,10 +88,6 @@ function submitLogin(email, password) {
     }
   })
   .then(data => {
-    console.log('Login successful!');
-    console.log('User logged in:', data.user);
-    console.log('Token:', data.token);
-    
     sessionStorage.setItem('authToken', data.token);
     sessionStorage.setItem('user', JSON.stringify(data.user));
     
