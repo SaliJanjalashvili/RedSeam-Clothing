@@ -31,6 +31,57 @@ function setupNavigationHandlers() {
       window.location.href = 'login.html';
     });
   }
+
+  const userInfo = document.getElementById('userInfo');
+  const userPopup = document.getElementById('userPopup');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  if (userInfo && userPopup) {
+    userInfo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleUserPopup();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!userInfo.contains(e.target)) {
+        closeUserPopup();
+      }
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', handleLogout);
+  }
+}
+
+function toggleUserPopup() {
+  const userPopup = document.getElementById('userPopup');
+  if (userPopup) {
+    const isVisible = userPopup.style.display === 'block';
+    userPopup.style.display = isVisible ? 'none' : 'block';
+  }
+}
+
+function closeUserPopup() {
+  const userPopup = document.getElementById('userPopup');
+  if (userPopup) {
+    userPopup.style.display = 'none';
+  }
+}
+
+function handleLogout() {
+  sessionStorage.removeItem('user');
+  sessionStorage.removeItem('authToken');
+  sessionStorage.removeItem('cartItems');
+  
+  const currentPage = window.location.pathname;
+  const currentFile = currentPage.split('/').pop() || 'index.html';
+  
+  if (currentFile === 'checkout.html' || currentFile === 'product.html') {
+    window.location.href = 'index.html';
+  } else {
+    window.location.reload();
+  }
 }
 
 function showLoginState(loginState, userState) {

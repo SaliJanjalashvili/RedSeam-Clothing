@@ -12,6 +12,11 @@ function setupCartEventListeners() {
   if (cartIcon) {
     cartIcon.addEventListener('click', (e) => {
       e.preventDefault();
+      const user = sessionStorage.getItem('user');
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
       openCartPanel();
     });
   }
@@ -63,6 +68,12 @@ function closeCartPanel() {
 }
 
 function addToCart(product, selectedSize, selectedColor, quantity = 1, selectedImage = null) {
+  const user = sessionStorage.getItem('user');
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
   const existingItemIndex = cartItems.findIndex(item => 
     item.id === product.id && 
     item.selectedSize === selectedSize && 
@@ -91,6 +102,12 @@ function addToCart(product, selectedSize, selectedColor, quantity = 1, selectedI
 }
 
 function removeFromCart(index) {
+  const user = sessionStorage.getItem('user');
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
   cartItems.splice(index, 1);
   saveCartToStorage();
   updateCartDisplay();
@@ -101,6 +118,12 @@ function removeFromCart(index) {
 }
 
 function updateQuantity(index, newQuantity) {
+  const user = sessionStorage.getItem('user');
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
   if (newQuantity < 1 || newQuantity > 10) {
     return;
   }
