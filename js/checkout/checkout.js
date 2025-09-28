@@ -84,6 +84,26 @@ function setupCheckoutEventListeners() {
       });
     }
   });
+
+  const successClose = document.getElementById('successCloseBtn');
+  const successOverlay = document.getElementById('successOverlay');
+  const continueShoppingBtn = document.getElementById('continueShoppingBtn');
+
+  if (successClose) {
+    successClose.addEventListener('click', closeSuccessModal);
+  }
+
+  if (successOverlay) {
+    successOverlay.addEventListener('click', (e) => {
+      if (e.target === successOverlay) {
+        closeSuccessModal();
+      }
+    });
+  }
+
+  if (continueShoppingBtn) {
+    continueShoppingBtn.addEventListener('click', closeSuccessModal);
+  }
 }
 
 function validateField(fieldId, value) {
@@ -211,6 +231,21 @@ function handlePlaceOrder(e) {
   }
 
   sessionStorage.removeItem('cartItems');
+  showSuccessModal();
+}
+
+function showSuccessModal() {
+  const successOverlay = document.getElementById('successOverlay');
+  if (successOverlay) {
+    successOverlay.style.display = 'flex';
+  }
+}
+
+function closeSuccessModal() {
+  const successOverlay = document.getElementById('successOverlay');
+  if (successOverlay) {
+    successOverlay.style.display = 'none';
+  }
   window.location.href = 'index.html';
 }
 
