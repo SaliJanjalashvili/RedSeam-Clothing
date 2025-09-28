@@ -1,10 +1,88 @@
 // Shopping Cart Module
 let cartItems = [];
 
+function findImageForColor(product, selectedColor, selectedImage) {
+  if (selectedImage) {
+    return selectedImage;
+  }
+  
+  if (window.productImageColorPairs) {
+    const matchingPair = window.productImageColorPairs.find(pair => 
+      pair.color === selectedColor
+    );
+    if (matchingPair && matchingPair.image) {
+      return matchingPair.image;
+    }
+  }
+  
+  return product.cover_image || product.images?.[0];
+}
+
 function initCart() {
-  loadCartFromStorage();
+  loadCartFromServer();
   setupCartEventListeners();
-  updateCartDisplay();
+}
+
+async function loadCartFromServer() {
+  const user = sessionStorage.getItem('user');
+  const token = sessionStorage.getItem('authToken');
+  
+  if (!user || !token) {
+    cartItems = [];
+    updateCartDisplay();
+    return;
+  }
+
+  try {
+    const response = await fetch('https://api.redseam.redberryinternship.ge/api/cart', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const cartData = await response.json();
+      
+      const existingCartItems = JSON.parse(sessionStorage.getItem('cartItems')) || [];
+      
+      const cleanExistingItems = existingCartItems.filter(item => !item._isBeingRemoved);
+      
+      cartItems = cartData.map(serverItem => {
+        const localItem = cleanExistingItems.find(local => 
+          local.id === serverItem.id && 
+          local.selectedSize === serverItem.size && 
+          local.selectedColor === serverItem.color
+        );
+        
+        return {
+          ...serverItem,
+          selectedSize: serverItem.size,
+          selectedColor: serverItem.color,
+          selectedImage: localItem?.selectedImage || localItem?.image || serverItem.image || serverItem.cover_image || serverItem.images?.[0],
+          cover_image: localItem?.cover_image || serverItem.cover_image,
+          images: localItem?.images || serverItem.images
+        };
+      });
+      
+      sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+      updateCartDisplay();
+    } else if (response.status === 401) {
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('authToken');
+      cartItems = [];
+      updateCartDisplay();
+    } else {
+      console.error('Failed to load cart:', response.status);
+      cartItems = [];
+      updateCartDisplay();
+    }
+  } catch (error) {
+    console.error('Error loading cart:', error);
+    cartItems = [];
+    updateCartDisplay();
+  }
 }
 
 function setupCartEventListeners() {
@@ -67,73 +145,219 @@ function closeCartPanel() {
   }
 }
 
-function addToCart(product, selectedSize, selectedColor, quantity = 1, selectedImage = null) {
+async function addToCart(product, selectedSize, selectedColor, quantity = 1, selectedImage = null) {
   const user = sessionStorage.getItem('user');
-  if (!user) {
+  const token = sessionStorage.getItem('authToken');
+  
+  if (!user || !token) {
     window.location.href = 'login.html';
     return;
   }
 
+  cartItems = cartItems.filter(item => !item._isBeingRemoved);
+
   const existingItemIndex = cartItems.findIndex(item => 
     item.id === product.id && 
     item.selectedSize === selectedSize && 
-    item.selectedColor === selectedColor
+    item.selectedColor === selectedColor &&
+    !item._isBeingRemoved
   );
 
-  const itemImage = selectedImage || product.cover_image;
+  const itemImage = findImageForColor(product, selectedColor, selectedImage);
 
   if (existingItemIndex > -1) {
     cartItems[existingItemIndex].quantity += quantity;
+    if (itemImage && !cartItems[existingItemIndex].selectedImage) {
+      cartItems[existingItemIndex].selectedImage = itemImage;
+    }
   } else {
     cartItems.push({
       id: product.id,
       name: product.name,
       price: product.price,
       image: itemImage,
+      cover_image: product.cover_image,
+      images: product.images,
       selectedSize,
       selectedColor,
+      selectedImage: itemImage,
       quantity
     });
   }
-
-  saveCartToStorage();
+  
+  const cleanCartItems = cartItems.map(item => {
+    const cleanItem = { ...item };
+    delete cleanItem._isBeingRemoved;
+    return cleanItem;
+  });
+  sessionStorage.setItem('cartItems', JSON.stringify(cleanCartItems));
   updateCartDisplay();
   openCartPanel();
+
+  try {
+    const response = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${product.id}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        quantity: quantity,
+        size: selectedSize,
+        color: selectedColor
+      })
+    });
+
+    if (response.ok) {
+      console.log('Item synced with server cart');
+    } else if (response.status === 401) {
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('authToken');
+      window.location.href = 'login.html';
+    } else {
+      console.error('Failed to sync with server cart:', response.status);
+      if (existingItemIndex > -1) {
+        cartItems[existingItemIndex].quantity -= quantity;
+      } else {
+        cartItems.pop();
+      }
+      sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+      updateCartDisplay();
+    }
+  } catch (error) {
+    console.error('Error syncing with server cart:', error);
+    if (existingItemIndex > -1) {
+      cartItems[existingItemIndex].quantity -= quantity;
+    } else {
+      cartItems.pop();
+    }
+    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+    updateCartDisplay();
+  }
 }
 
-function removeFromCart(index) {
+async function removeFromCart(index) {
   const user = sessionStorage.getItem('user');
-  if (!user) {
+  const token = sessionStorage.getItem('authToken');
+  
+  if (!user || !token) {
     window.location.href = 'login.html';
     return;
   }
 
-  cartItems.splice(index, 1);
-  saveCartToStorage();
+  if (index < 0 || index >= cartItems.length) {
+    return;
+  }
+
+  const item = cartItems[index];
+  const removedItem = cartItems.splice(index, 1)[0];
+
+  removedItem._isBeingRemoved = true;
+
+  sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
   updateCartDisplay();
   
   if (typeof window.refreshCheckoutSummary === 'function') {
     window.refreshCheckoutSummary();
   }
+
+  try {
+    const response = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${item.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok || response.status === 204) {
+      console.log('Item removed from server cart');
+    } else if (response.status === 401) {
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('authToken');
+      window.location.href = 'login.html';
+    } else {
+      console.error('Failed to remove from server cart:', response.status);
+      delete removedItem._isBeingRemoved;
+      cartItems.splice(index, 0, removedItem);
+      sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+      updateCartDisplay();
+    }
+  } catch (error) {
+    console.error('Error removing from server cart:', error);
+    delete removedItem._isBeingRemoved;
+    cartItems.splice(index, 0, removedItem);
+    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+    updateCartDisplay();
+  }
 }
 
-function updateQuantity(index, newQuantity) {
+async function updateQuantity(index, newQuantity) {
   const user = sessionStorage.getItem('user');
-  if (!user) {
+  const token = sessionStorage.getItem('authToken');
+  
+  if (!user || !token) {
     window.location.href = 'login.html';
     return;
   }
 
-  if (newQuantity < 1 || newQuantity > 10) {
+  if (newQuantity < 1 || newQuantity > 10 || index < 0 || index >= cartItems.length) {
     return;
   }
+
+  const item = cartItems[index];
+  const oldQuantity = item.quantity;
   
   cartItems[index].quantity = newQuantity;
-  saveCartToStorage();
+  sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
   updateCartDisplay();
   
   if (typeof window.refreshCheckoutSummary === 'function') {
     window.refreshCheckoutSummary();
+  }
+
+  try {
+    const deleteResponse = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${item.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (deleteResponse.ok || deleteResponse.status === 204) {
+      const addResponse = await fetch(`https://api.redseam.redberryinternship.ge/api/cart/products/${item.id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          quantity: newQuantity,
+          size: item.selectedSize,
+          color: item.selectedColor
+        })
+      });
+
+      if (addResponse.ok) {
+        console.log('Quantity updated on server');
+      } else {
+        throw new Error('Failed to re-add item with new quantity');
+      }
+    } else {
+      throw new Error('Failed to remove item for quantity update');
+    }
+  } catch (error) {
+    console.error('Error updating quantity on server:', error);
+    cartItems[index].quantity = oldQuantity;
+    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+    updateCartDisplay();
+    
+    if (typeof window.refreshCheckoutSummary === 'function') {
+      window.refreshCheckoutSummary();
+    }
   }
 }
 
@@ -160,7 +384,7 @@ function updateCartDisplay() {
   if (cartItems_container) {
     cartItems_container.innerHTML = cartItems.map((item, index) => `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+        <img src="${item.selectedImage || item.image || item.cover_image || item.images?.[0] || 'assets/products/placeholder.jpg'}" alt="${item.name}" class="cart-item-image">
         <div class="cart-item-details">
           <div class="cart-item-header">
             <h4 class="cart-item-name">${item.name}</h4>
@@ -208,6 +432,7 @@ function loadCartFromStorage() {
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
 window.updateQuantity = updateQuantity;
+window.refreshCart = loadCartFromServer;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCart);

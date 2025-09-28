@@ -37,7 +37,7 @@ function loadCartSummary() {
 
   summaryItems.innerHTML = cartItems.map((item, index) => `
     <div class="summary-item">
-      <img src="${item.image}" alt="${item.name}" class="summary-item-image">
+      <img src="${item.selectedImage || item.image || item.cover_image || item.images?.[0] || 'assets/products/placeholder.jpg'}" alt="${item.name}" class="summary-item-image">
       <div class="summary-item-details">
         <div class="summary-item-name">
           <span>${item.name}</span>
@@ -81,6 +81,10 @@ function setupCheckoutEventListeners() {
     if (input) {
       input.addEventListener('input', () => {
         input.style.borderColor = '';
+        const existingError = input.parentNode.querySelector('.error-message');
+        if (existingError) {
+          existingError.remove();
+        }
       });
     }
   });
@@ -195,7 +199,7 @@ function showError(fieldId, message) {
   }
 }
 
-function handlePlaceOrder(e) {
+async function handlePlaceOrder(e) {
   e?.preventDefault();
   
   clearFieldErrors();
@@ -230,8 +234,125 @@ function handlePlaceOrder(e) {
     return;
   }
 
-  sessionStorage.removeItem('cartItems');
-  showSuccessModal();
+  const placeOrderBtn = document.getElementById('placeOrderBtn');
+  if (placeOrderBtn) {
+    placeOrderBtn.disabled = true;
+    placeOrderBtn.textContent = 'Processing...';
+  }
+
+  try {
+    await submitCheckout();
+  } catch (error) {
+    console.error('Checkout failed:', error);
+    if (placeOrderBtn) {
+      placeOrderBtn.disabled = false;
+      placeOrderBtn.textContent = 'Place Order';
+    }
+  }
+}
+
+async function submitCheckout() {
+  const user = sessionStorage.getItem('user');
+  const token = sessionStorage.getItem('authToken');
+  
+  if (!user || !token) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  try {
+    const formData = {
+      name: document.getElementById('firstName')?.value.trim(),
+      surname: document.getElementById('lastName')?.value.trim(),
+      email: document.getElementById('email')?.value.trim(),
+      address: document.getElementById('address')?.value.trim(),
+      zip_code: document.getElementById('zipCode')?.value.trim()
+    };
+
+    console.log('Submitting checkout with data:', formData);
+
+    const response = await fetch('https://api.redseam.redberryinternship.ge/api/cart/checkout', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(formData)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Checkout successful:', data);
+      
+      sessionStorage.removeItem('cartItems');
+      
+      showSuccessModal();
+    } else if (response.status === 401) {
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('authToken');
+      window.location.href = 'login.html';
+    } else if (response.status === 400) {
+      const errorData = await response.json();
+      console.error('Checkout error:', errorData);
+      alert('Checkout failed: ' + (errorData.message || 'Please try again'));
+      
+      const placeOrderBtn = document.getElementById('placeOrderBtn');
+      if (placeOrderBtn) {
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = 'Place Order';
+      }
+    } else if (response.status === 422) {
+      const errorData = await response.json();
+      console.error('Validation errors:', errorData);
+      
+      if (errorData.errors) {
+        Object.keys(errorData.errors).forEach(field => {
+          const fieldMapping = {
+            'name': 'firstName',
+            'surname': 'lastName',
+            'email': 'email',
+            'address': 'address',
+            'zip_code': 'zipCode'
+          };
+          
+          const frontendFieldId = fieldMapping[field];
+          if (frontendFieldId && errorData.errors[field][0]) {
+            showError(frontendFieldId, errorData.errors[field][0]);
+          }
+        });
+      } else {
+        alert('Validation failed: ' + (errorData.message || 'Please check your information'));
+      }
+      
+      const placeOrderBtn = document.getElementById('placeOrderBtn');
+      if (placeOrderBtn) {
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = 'Place Order';
+      }
+    } else {
+      const errorText = await response.text();
+      console.error('Checkout failed:', response.status, errorText);
+      alert('Checkout failed. Please try again.');
+      
+      const placeOrderBtn = document.getElementById('placeOrderBtn');
+      if (placeOrderBtn) {
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = 'Place Order';
+      }
+    }
+  } catch (error) {
+    console.error('Network error during checkout:', error);
+    alert('Network error. Please check your connection and try again.');
+    
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    if (placeOrderBtn) {
+      placeOrderBtn.disabled = false;
+      placeOrderBtn.textContent = 'Place Order';
+    }
+    
+    throw error;
+  }
 }
 
 function showSuccessModal() {
