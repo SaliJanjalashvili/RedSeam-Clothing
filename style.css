@@ -208,7 +208,6 @@ body {
 
 /* Login Page Styles */
 .login-page {
-  margin-top: 80px;
   height: calc(100vh - 80px);
   display: flex;
   align-items: center;
